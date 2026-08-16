@@ -1,5 +1,9 @@
 # coding-discipline-skills
 
+> **Archived — these skills now live in [k12club/claude-skills](https://github.com/k12club/claude-skills).**
+>
+> They were merged there alongside a set of working-discipline skills, where each one carries the measured result that justified keeping it. Install the whole set with `claude plugin marketplace add k12club/claude-skills` followed by `claude plugin install claude-skills`. This repository is kept read-only so existing links resolve.
+
 A collection of coding-discipline skills for AI coding agents (Kimi Code, Claude Code, and other skill-compatible agents).
 
 Modern coding agents already write good syntax. Where they fail is **discipline**: editing code they haven't read, jumping to implementation before designing the interface, rewriting 40 files in one diff, declaring "done" without re-reading their own work. Each skill in this repo is a countermeasure for one of those failure modes — a `SKILL.md` file of opinionated procedure that the agent loads when a task matches its trigger.
