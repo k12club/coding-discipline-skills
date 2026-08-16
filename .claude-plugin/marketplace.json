@@ -1,0 +1,16 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "coding-discipline-skills",
+  "description": "Coding-discipline skills for AI coding agents: countermeasures for the failure modes agents repeat when writing and changing code",
+  "owner": {
+    "name": "palm",
+    "url": "https://github.com/k12club"
+  },
+  "plugins": [
+    {
+      "name": "coding-discipline",
+      "source": "./",
+      "description": "Coding-discipline skills for AI coding agents: interface-first design, reconnaissance before editing, stepwise refactoring, type modeling, and self-review"
+    }
+  ]
+}

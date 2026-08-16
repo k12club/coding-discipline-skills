@@ -11,18 +11,22 @@ Skills teach judgment and procedure, not basics. If a skill could be replaced by
 ```
 coding-discipline-skills/
 ├── README.md
-├── interface-first/SKILL.md
-├── read-before-write/SKILL.md
-├── refactor-in-steps/SKILL.md
-├── types-as-design/SKILL.md
-└── self-review/SKILL.md
+├── .claude-plugin/
+│   ├── marketplace.json
+│   └── plugin.json
+└── skills/
+    ├── interface-first/SKILL.md
+    ├── read-before-write/SKILL.md
+    ├── refactor-in-steps/SKILL.md
+    ├── types-as-design/SKILL.md
+    └── self-review/SKILL.md
 ```
 
-Each skill is a self-contained directory. One file per skill, no build step, no dependencies — the agent reads the Markdown and follows it.
+Each skill is a self-contained directory. One file per skill, no build step, no dependencies — the agent reads the Markdown and follows it. The `.claude-plugin/` manifests are what let Claude Code install the whole set as one plugin; every other agent can ignore them.
 
 ## The skills
 
-### [interface-first](interface-first/SKILL.md)
+### [interface-first](skills/interface-first/SKILL.md)
 
 **Trigger:** building a new module, class, or public API; a refactor that changes a module's boundaries.
 
@@ -35,7 +39,7 @@ Agents write implementation first and let the interface emerge from it — so th
 
 Also includes Ousterhout's depth test for shallow modules, "define errors out of existence", and anti-patterns (pass-through methods, temporal decomposition, speculative generality).
 
-### [read-before-write](read-before-write/SKILL.md)
+### [read-before-write](skills/read-before-write/SKILL.md)
 
 **Trigger:** any non-trivial edit to an existing codebase.
 
@@ -49,7 +53,7 @@ An agent's default style is an average of the internet; the project's style is s
 
 Edge rule: even when the existing convention is bad, match it within the change and flag the improvement separately — a diff that both fixes a bug and restyles the neighborhood is unreviewable.
 
-### [refactor-in-steps](refactor-in-steps/SKILL.md)
+### [refactor-in-steps](skills/refactor-in-steps/SKILL.md)
 
 **Trigger:** refactor, restructure, cleanup, or rename spanning multiple files or callers.
 
@@ -62,7 +66,7 @@ Agents asked to refactor tend to produce one giant broken diff. This skill force
 
 Hard rule: a refactoring never shares a commit with a behavior change. The tell that you mixed them: the commit message needs the word "and".
 
-### [types-as-design](types-as-design/SKILL.md)
+### [types-as-design](skills/types-as-design/SKILL.md)
 
 **Trigger:** modeling domain state; boolean/optional-field piles; `if` checks on field combinations multiplying across the codebase.
 
@@ -77,7 +81,7 @@ Every `if` that checks a combination of fields is a type that doesn't exist yet.
 
 Includes the decision rule for when NOT to do this (type golf is worse than a named runtime check) and the boundary discipline: parse untrusted input once at the system's edges.
 
-### [self-review](self-review/SKILL.md)
+### [self-review](skills/self-review/SKILL.md)
 
 **Trigger:** before reporting any code change as complete; before every commit.
 
@@ -93,24 +97,31 @@ The output contract is a three-part report: what changed and why, what was verif
 
 ## Installation
 
-Skills are discovered from a skills directory the agent scans, e.g. `~/.agents/skills/` for user-scope skills. Symlink so updates to this repo take effect immediately:
+### Claude Code, as a plugin
+
+This repo is a plugin marketplace. Two commands, and updates arrive on their own:
+
+```sh
+claude plugin marketplace add k12club/coding-discipline-skills
+claude plugin install coding-discipline
+```
+
+The same thing works from inside a session with `/plugin`. Confirm with `claude plugin list`.
+
+### Any agent, by hand
+
+Skills are discovered from a directory the agent scans — `~/.claude/skills/` for Claude Code, `~/.agents/skills/` for Kimi Code. Symlink so edits to this repo take effect immediately:
 
 ```sh
 cd /path/to/coding-discipline-skills
-for d in */; do
-  [ -f "$d/SKILL.md" ] && ln -sfn "$(pwd)/${d%/}" ~/.agents/skills/"${d%/}"
+for d in skills/*/; do
+  [ -f "$d/SKILL.md" ] && ln -sfn "$(pwd)/${d%/}" ~/.claude/skills/"$(basename "$d")"
 done
 ```
 
-Or copy instead of symlinking if you prefer a snapshot:
+Swap the target directory for the agent you use, or copy instead of symlinking if you prefer a snapshot that never moves under you. Verify with `ls -la ~/.claude/skills/` — each skill should resolve to a directory containing `SKILL.md`. Start a fresh agent session for the new skills to be picked up.
 
-```sh
-for d in */; do
-  [ -f "$d/SKILL.md" ] && cp -R "${d%/}" ~/.agents/skills/
-done
-```
-
-Verify with `ls -la ~/.agents/skills/` — each skill should resolve to a directory containing `SKILL.md`. Start a fresh agent session for the new skills to be picked up.
+Pick one mechanism per agent. Installing the plugin *and* symlinking the same skill by hand gives that agent two copies of the same instructions.
 
 ## How triggering works
 

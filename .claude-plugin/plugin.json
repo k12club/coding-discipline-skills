@@ -1,0 +1,20 @@
+{
+  "name": "coding-discipline",
+  "version": "1.0.0",
+  "description": "Coding-discipline skills for AI coding agents. Countermeasures for the failure modes agents repeat: editing code they haven't read, implementing before the interface is designed, rewriting 40 files in one diff, piling booleans where a union belongs, and declaring done without re-reading the diff.",
+  "author": {
+    "name": "palm",
+    "url": "https://github.com/k12club"
+  },
+  "repository": "https://github.com/k12club/coding-discipline-skills",
+  "homepage": "https://github.com/k12club/coding-discipline-skills#readme",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "code-quality",
+    "refactoring",
+    "api-design",
+    "typescript",
+    "code-review"
+  ]
+}
